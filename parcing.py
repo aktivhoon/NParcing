@@ -30,7 +30,9 @@ def convert_name(name):
     elif len(name) > 2:
         return name[0] + "O"*(len(name)-2) + name[-1]
 
-def write_adm_dc(ws, adm, dc, start_row=1, ward_name=None):
+def write_adm_dc(ws, adm, dc, *num, start_row=1, ward_name=None):
+    if num != () :
+        empty_room, n_man, n_woman = num
     altered_row = start_row
     if ward_name != "61병동" and ward_name != "62병동":
         start_row -= 1
@@ -65,8 +67,8 @@ def write_adm_dc(ws, adm, dc, start_row=1, ward_name=None):
     ws.cell(altered_row, 1, ward_name)
     
     if ward_name == "61병동" or ward_name == "62병동":
-        ws.cell(start_row, 2, "공실수: ")
-        ws.cell(start_row, 3, "입원대기자수 : 남  여  ")
+        ws.cell(start_row, 2, "공실수: "+empty_room)
+        ws.cell(start_row, 3, "입원대기자수 : 남 "+n_man+" 여 "+n_woman)
 
     ws.cell(start_row+1, 2, "입원: " + str(len(adm)))
     ws.cell(start_row+max(1,len(adm))+max(1,len(dc))+1, 2, "특이사항 없음")
@@ -85,7 +87,7 @@ def write_adm_dc(ws, adm, dc, start_row=1, ward_name=None):
     if len(dc) == 0:
         ws.merge_cells(start_row=start_row+1+max(1,len(adm)), start_column=3, end_row=start_row+1+max(1,len(adm)), end_column=6)
 
-def generate_excel(input1, input2):
+def generate_excel(input1, input2,_61_empty,_61_man,_61_woman,_62_empty,_62_man,_62_woman):
     DEFAULT_FONT.sz = 9
     df1 = pd.read_csv(input1, sep="\t", header=0)
     adm_61 = []
@@ -137,10 +139,10 @@ def generate_excel(input1, input2):
     start_121 = max(1,len(adm_61))+max(1,len(adm_62))+max(1,len(adm_37))+max(1,len(dc_61))+max(1,len(dc_62))+max(1,len(dc_37))+6
     start_opd = max(1,len(adm_61))+max(1,len(adm_62))+max(1,len(adm_37))+max(1, len(adm_121))+max(1,len(dc_61))+max(1,len(dc_62))+max(1,len(dc_37))+max(1,len(dc_121))+8
 
-    write_adm_dc(write_ws, adm_61, dc_61, start_row=1, ward_name="61병동")
-    write_adm_dc(write_ws, adm_62, dc_62, start_row=start_62, ward_name="62병동")
+    write_adm_dc(write_ws, adm_61, dc_61, _61_empty,_61_man,_61_woman, start_row=1, ward_name="61병동")
+    write_adm_dc(write_ws, adm_62, dc_62, _62_empty,_62_man,_62_woman, start_row=start_62, ward_name="62병동")
     write_adm_dc(write_ws, adm_37, dc_37, start_row=start_37, ward_name="낮병원")
-    write_adm_dc(write_ws, adm_37, dc_37, start_row=start_121, ward_name="특실")
+    write_adm_dc(write_ws, adm_121, dc_121, start_row=start_121, ward_name="특실")
     write_ws.cell(start_opd, 1, "외래")
     currentCell = write_ws.cell(start_opd, 1)
     currentCell.alignment = Alignment(horizontal='center', vertical='center')
