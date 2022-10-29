@@ -1,12 +1,28 @@
 import pandas as pd
 from openpyxl import Workbook
-from openpyxl.styles import Alignment, Border, Side
+from openpyxl.styles import Alignment, Border, Side, DEFAULT_FONT
 
 def set_border(ws, cell_range):
     thin = Side(border_style="thin", color="000000")
     for row in ws[cell_range]:
         for cell in row:
             cell.border = Border(top=thin, left=thin, right=thin, bottom=thin)
+
+def set_thick_border(ws, cell_range):
+    thin = Side(border_style="thin", color="000000")
+    thick = Side(border_style="medium", color="000000")
+    upper_cell_num = cell_range.split(":")[0][1:]
+    lower_cell_num = cell_range.split(":")[1][1:]
+    ws['A'+upper_cell_num].border = Border(top=thick, left=thick, right=thin, bottom=thin)
+    ws['A'+lower_cell_num].border = Border(top=thin, left=thick, right=thin, bottom=thick)
+    ws['G'+upper_cell_num].border = Border(top=thick, left=thin, right=thick, bottom=thin)
+    ws['G'+lower_cell_num].border = Border(top=thin, left=thin, right=thick, bottom=thick)
+    for i in range(int(upper_cell_num)+1, int(lower_cell_num)):
+        ws['A'+str(i)].border = Border(top=thin, left=thick, right=thin, bottom=thin)
+        ws['G'+str(i)].border = Border(top=thin, left=thin, right=thick, bottom=thin)
+    for j in 'BCDEF':
+        ws[j+upper_cell_num].border = Border(top=thick, left=thin, right=thin, bottom=thin)
+        ws[j+lower_cell_num].border = Border(top=thin, left=thin, right=thin, bottom=thick)
 
 def convert_name(name):
     if len(name) == 2:
@@ -70,6 +86,7 @@ def write_adm_dc(ws, adm, dc, start_row=1, ward_name=None):
         ws.merge_cells(start_row=start_row+1+max(1,len(adm)), start_column=3, end_row=start_row+1+max(1,len(adm)), end_column=6)
 
 def generate_excel(input1, input2):
+    DEFAULT_FONT.sz = 9
     df1 = pd.read_csv(input1, sep="\t", header=0)
     adm_61 = []
     adm_62 = []
@@ -115,12 +132,17 @@ def generate_excel(input1, input2):
 
     write_wb = Workbook()
     write_ws = write_wb.active
+    start_62 = max(1,len(adm_61))+max(1,len(dc_61))+3
+    start_37 = max(1,len(adm_61))+max(1,len(adm_62))+max(1,len(dc_61))+max(1,len(dc_62))+5
+    start_121 = max(1,len(adm_61))+max(1,len(adm_62))+max(1,len(adm_37))+max(1,len(dc_61))+max(1,len(dc_62))+max(1,len(dc_37))+6
+    start_opd = max(1,len(adm_61))+max(1,len(adm_62))+max(1,len(adm_37))+max(1, len(adm_121))+max(1,len(dc_61))+max(1,len(dc_62))+max(1,len(dc_37))+max(1,len(dc_121))+8
+
     write_adm_dc(write_ws, adm_61, dc_61, start_row=1, ward_name="61병동")
-    write_adm_dc(write_ws, adm_62, dc_62, start_row=max(1,len(adm_61))+max(1,len(dc_61))+3, ward_name="62병동")
-    write_adm_dc(write_ws, adm_37, dc_37, start_row=max(1,len(adm_61))+max(1,len(adm_62))+max(1,len(dc_61))+max(1,len(dc_62))+5, ward_name="낮병원")
-    write_adm_dc(write_ws, adm_37, dc_37, start_row=max(1,len(adm_61))+max(1,len(adm_62))+max(1,len(adm_37))+max(1,len(dc_61))+max(1,len(dc_62))+max(1,len(dc_37))+6, ward_name="특실")
-    write_ws.cell(max(1,len(adm_61))+max(1,len(adm_62))+max(1,len(adm_37))+max(1, len(adm_121))+max(1,len(dc_61))+max(1,len(dc_62))+max(1,len(dc_37))+max(1,len(dc_121))+8, 1, "외래")
-    currentCell = write_ws.cell(max(1,len(adm_61))+max(1,len(adm_62))+max(1,len(adm_37))+max(1, len(adm_121))+max(1,len(dc_61))+max(1,len(dc_62))+max(1,len(dc_37))+max(1,len(dc_121))+8, 1)
+    write_adm_dc(write_ws, adm_62, dc_62, start_row=start_62, ward_name="62병동")
+    write_adm_dc(write_ws, adm_37, dc_37, start_row=start_37, ward_name="낮병원")
+    write_adm_dc(write_ws, adm_37, dc_37, start_row=start_121, ward_name="특실")
+    write_ws.cell(start_opd, 1, "외래")
+    currentCell = write_ws.cell(start_opd, 1)
     currentCell.alignment = Alignment(horizontal='center', vertical='center')
     write_ws.column_dimensions['A'].width = 8
     write_ws.column_dimensions['B'].width = 9.38
@@ -130,6 +152,13 @@ def generate_excel(input1, input2):
     write_ws.column_dimensions['F'].width = 51.38
     write_ws.column_dimensions['G'].width = 41
 
-    set_border(write_ws, 'A1:G{}'.format(max(1,len(adm_61))+max(1,len(adm_62))+max(1,len(adm_37))+max(1, len(adm_121))+max(1,len(dc_61))+max(1,len(dc_62))+max(1,len(dc_37))+max(1,len(dc_121))+8)) 
+    
+
+    set_border(write_ws, 'A1:G{}'.format(start_opd)) 
+    set_thick_border(write_ws, 'A1:G{}'.format(start_62-1))
+    set_thick_border(write_ws, 'A{}:G{}'.format(start_62, start_37-1))
+    set_thick_border(write_ws, 'A{}:G{}'.format(start_37, start_121-1))
+    set_thick_border(write_ws, 'A{}:G{}'.format(start_121, start_opd-1))
+    set_thick_border(write_ws, 'A{}:G{}'.format(start_opd, start_opd))
 
     write_wb.save("dangjik.xlsx")
