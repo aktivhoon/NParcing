@@ -12,7 +12,7 @@
 
 <center><img src="images/full.png"></center>
 
-이후 generate을 누르면, `dangjik.xlsx` 파일이 `Nparcing.exe` 파일이 있는 폴더 내에 만들어진 후 자동 실행됩니다! (끝!)
+이후 generate을 누르면, `dangjik.xlsx` 파일이 `nparsing.exe` 파일이 있는 폴더 내에 만들어진 후 자동 실행됩니다! (끝!)
 혹시 오류사항이 있다면 `김영훈`에게 알려주세요! ㅎㅎ
 
 ***May the 내공 be with you..***
