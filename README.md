@@ -3,7 +3,7 @@
 
 ## How to use
 
-`Nparcing.exe` 파일을 실행합니다.
+구글 drive에 올려놓은 `Nparcing.exe` 파일을 실행합니다.
 
 <center><img src="images/blank.png"></center>
 
@@ -16,3 +16,5 @@
 혹시 오류사항이 있다면 `김영훈`에게 알려주세요! ㅎㅎ
 
 ***May the 내공 be with you..***
+
+*Special thanks to: 함께 버그 잡아주고 기능 추가를 도와준 지홍이 형*
