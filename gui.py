@@ -1,14 +1,8 @@
-from re import S
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QIntValidator,QDoubleValidator,QFont
-from PyQt5.QtCore import Qt
 import sys
-import pandas as pd
 from io import StringIO
 from parcing import generate_excel 
-import ctypes
-
-calc = ("c:\windows\system32\\calc.exe")
+import os
 
 class MainWindow(QWidget):
     def __init__(self,parent=None):
@@ -70,7 +64,8 @@ class MainWindow(QWidget):
         adm_text = StringIO(self.e1.text())
         dc_text = StringIO(self.e2.text())
         generate_excel(adm_text, dc_text, self._61_empty.text(),self._61_man.text(),self._61_woman.text(),self._62_empty.text(),self._62_man.text(),self._62_woman.text())
-        QMessageBox.about(self,'작업 완료','당직표 파일이 생성되었습니다!')
+        QMessageBox.about(self,'작업 완료','당직표 파일이 생성되었습니다!\n엑셀이 실행됩니다.')
+        os.startfile('dangjik.xlsx')
         self.close()
 
 if __name__ == "__main__":
