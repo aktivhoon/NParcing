@@ -66,15 +66,12 @@ class MainWindow(QWidget):
         self.setLayout(flo)
         self.setWindowTitle("NParcing by. YHKim")
 
-    def enterPress(self):
-        print("Enter pressed")
-
     def execute(self):
         adm_text = StringIO(self.e1.text())
         dc_text = StringIO(self.e2.text())
         generate_excel(adm_text, dc_text, self._61_empty.text(),self._61_man.text(),self._61_woman.text(),self._62_empty.text(),self._62_man.text(),self._62_woman.text())
         QMessageBox.about(self,'작업 완료','당직표 파일이 생성되었습니다!')
-        ctypes.windll.shell32.ShellExecuteA(0, 'open', calc, None, None, 1)
+        self.close()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

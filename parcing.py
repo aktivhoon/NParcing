@@ -36,10 +36,7 @@ def write_adm_dc(ws, adm, dc, *num, start_row=1, ward_name=None):
     altered_row = start_row
     if ward_name != "61병동" and ward_name != "62병동":
         start_row -= 1
-        if ward_name == "특실":
-            ws.merge_cells(start_row=altered_row, start_column=1, end_row=altered_row+max(1,len(adm))+max(1,len(dc))-1, end_column=1)
-        else:
-            ws.merge_cells(start_row=altered_row, start_column=1, end_row=altered_row+max(1,len(adm))+max(1,len(dc)), end_column=1)
+        ws.merge_cells(start_row=altered_row, start_column=1, end_row=altered_row+max(1,len(adm))+max(1,len(dc)), end_column=1)
     else:
         ws.merge_cells(start_row=altered_row, start_column=1, end_row=altered_row+max(1,len(adm))+max(1,len(dc))+1, end_column=1)
     currentCell = ws.cell(altered_row, 1)
@@ -137,7 +134,7 @@ def generate_excel(input1, input2,_61_empty,_61_man,_61_woman,_62_empty,_62_man,
     start_62 = max(1,len(adm_61))+max(1,len(dc_61))+3
     start_37 = max(1,len(adm_61))+max(1,len(adm_62))+max(1,len(dc_61))+max(1,len(dc_62))+5
     start_121 = max(1,len(adm_61))+max(1,len(adm_62))+max(1,len(adm_37))+max(1,len(dc_61))+max(1,len(dc_62))+max(1,len(dc_37))+6
-    start_opd = max(1,len(adm_61))+max(1,len(adm_62))+max(1,len(adm_37))+max(1, len(adm_121))+max(1,len(dc_61))+max(1,len(dc_62))+max(1,len(dc_37))+max(1,len(dc_121))+8
+    start_opd = max(1,len(adm_61))+max(1,len(adm_62))+max(1,len(adm_37))+max(1, len(adm_121))+max(1,len(dc_61))+max(1,len(dc_62))+max(1,len(dc_37))+max(1,len(dc_121))+7
 
     write_adm_dc(write_ws, adm_61, dc_61, _61_empty,_61_man,_61_woman, start_row=1, ward_name="61병동")
     write_adm_dc(write_ws, adm_62, dc_62, _62_empty,_62_man,_62_woman, start_row=start_62, ward_name="62병동")
@@ -145,6 +142,10 @@ def generate_excel(input1, input2,_61_empty,_61_man,_61_woman,_62_empty,_62_man,
     write_adm_dc(write_ws, adm_121, dc_121, start_row=start_121, ward_name="특실")
     write_ws.cell(start_opd, 1, "외래")
     currentCell = write_ws.cell(start_opd, 1)
+    currentCell.alignment = Alignment(horizontal='center', vertical='center')
+    write_ws.merge_cells(start_row=start_opd, start_column=2, end_row=start_opd, end_column=7)
+    write_ws.cell(start_opd, 2, "특이사항 없음")
+    currentCell = write_ws.cell(start_opd, 2)
     currentCell.alignment = Alignment(horizontal='center', vertical='center')
     write_ws.column_dimensions['A'].width = 8
     write_ws.column_dimensions['B'].width = 9.38
