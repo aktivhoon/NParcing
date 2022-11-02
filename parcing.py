@@ -86,12 +86,18 @@ def write_adm_dc(ws, adm, dc, *num, start_row=1, ward_name=None):
 
 def generate_excel(input1, input2,_61_empty,_61_man,_61_woman,_62_empty,_62_man,_62_woman):
     DEFAULT_FONT.sz = 9
-    df1 = pd.read_csv(input1, sep="\t", header=0)
+    if (input1.getvalue() == '') : 
+        df1 = pd.DataFrame()
+    else :
+        df1 = pd.read_csv(input1, sep="\t", header=0)
     adm_61 = []
     adm_62 = []
     adm_37 = []
     adm_121 = []
-    df2 = pd.read_csv(input2, sep="\t", header=0)
+    if (input2.getvalue() == '') :
+        df2 = pd.DataFrame()
+    else :
+        df2 = pd.read_csv(input2, sep="\t", header=0)
     dc_61 = []
     dc_62 = []
     dc_37 = []
