@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 import sys
 from io import StringIO
-from parcing import generate_excel 
+from parsing import generate_excel
 import os
 
 class MainWindow(QWidget):
@@ -58,7 +58,7 @@ class MainWindow(QWidget):
         flo.addRow(self.b1)
 
         self.setLayout(flo)
-        self.setWindowTitle("NParcing by. YHKim")
+        self.setWindowTitle("NParsing by. YHKim, JHChung")
 
     def execute(self):
         adm_text = StringIO(self.e1.text())
