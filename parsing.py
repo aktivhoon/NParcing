@@ -46,7 +46,13 @@ def make_space(ws, n, start_row, row_name) :
     for i in range(start_row, start_row+n):
         ws.row_dimensions[i].height = 118.8
         for j in range(1, 13):
-            ws.cell(i,j).alignment = Alignment(horizontal='center', vertical='center', wrapText=True)
+            if j == 6 or j ==7 : # 의뢰사유 및 평가내용, 진단치료결과는 왼쪽 정렬
+                ws.cell(i,j).alignment = Alignment(horizontal='left', vertical='center', wrapText=True)
+            elif j == 8 :  # 자살시도 N 채워두기 
+                ws.cell(i,j).alignment = Alignment(horizontal='center', vertical='center', wrapText=True)
+                ws.cell(i,j,"N")
+            else : # 나머지는 가운데 정렬
+                ws.cell(i,j).alignment = Alignment(horizontal='center', vertical='center', wrapText=True)
 
 def write_adm_dc(ws, adm, dc, *num, start_row=1, ward_name=None):
     if num != () :
