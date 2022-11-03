@@ -1,3 +1,4 @@
+from asyncore import write
 import pandas as pd
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Border, Side, DEFAULT_FONT
@@ -35,6 +36,17 @@ def convert_name(name):
         return name[0] + "O"
     elif len(name) > 2:
         return name[0] + "O"*(len(name)-2) + name[-1]
+
+def make_space(ws, n, start_row, row_name) :
+    if n == 0:
+        return
+    ws.merge_cells(start_row=start_row, start_column=1, end_row=start_row+n-1, end_column=1)
+    ws.cell(start_row,1,row_name)
+    ws.cell(start_row,1).alignment = Alignment(horizontal='center', vertical='center', wrapText=True)
+    for i in range(start_row, start_row+n):
+        ws.row_dimensions[i].height = 118.8
+        for j in range(1, 13):
+            ws.cell(i,j).alignment = Alignment(horizontal='center', vertical='center', wrapText=True)
 
 def write_adm_dc(ws, adm, dc, *num, start_row=1, ward_name=None):
     if num != () :
@@ -90,7 +102,7 @@ def write_adm_dc(ws, adm, dc, *num, start_row=1, ward_name=None):
     if len(dc) == 0:
         ws.merge_cells(start_row=start_row+1+max(1,len(adm)), start_column=3, end_row=start_row+1+max(1,len(adm)), end_column=6)
 
-def generate_excel(input1, input2,_61_empty,_61_man,_61_woman,_62_empty,_62_man,_62_woman):
+def generate_excel(input1, input2,_61_empty,_61_man,_61_woman,_62_empty,_62_man,_62_woman,yesterday_ped, yesterday_adult,today_day_adult,today_night_ped, today_night_adult):
     DEFAULT_FONT.sz = 9
     if (input1.getvalue() == '') : 
         df1 = pd.DataFrame()
@@ -144,11 +156,23 @@ def generate_excel(input1, input2,_61_empty,_61_man,_61_woman,_62_empty,_62_man,
     write_wb = Workbook()
     write_ws = write_wb.active
     
-    start_61 = 2 #will be edited
+    start_yesterday_ped = 3
+    start_yesterday_adult = start_yesterday_ped + int(yesterday_ped)
+    start_today_day_adult = start_yesterday_adult + int(yesterday_adult)
+    start_today_night_ped = start_today_day_adult + int(today_day_adult)
+    start_today_night_adult = start_today_night_ped + int(today_night_ped)
+
+    start_61 = start_today_night_adult+int(today_night_adult)+1
     start_62 = max(1,len(adm_61))+max(1,len(dc_61))+2+start_61
     start_37 = start_62+max(1,len(adm_62))+max(1,len(dc_62))+2
     start_121 = start_37+max(1,len(adm_37))+max(1,len(dc_37))+1
     start_opd = start_121+max(1, len(adm_121))+max(1,len(dc_121))+1
+
+    make_space(write_ws, int(yesterday_ped),start_row =start_yesterday_ped, row_name="전일\n소아당직")
+    make_space(write_ws, int(yesterday_adult),start_row =start_yesterday_adult, row_name="전일\n성인당직")
+    make_space(write_ws, int(today_day_adult),start_row =start_today_day_adult, row_name="성인\n낮당직")
+    make_space(write_ws, int(today_night_ped),start_row =start_today_night_ped, row_name="소아\n밤당직")
+    make_space(write_ws, int(today_night_adult),start_row =start_today_night_adult, row_name="성인\n밤당직")
 
     write_adm_dc(write_ws, adm_61, dc_61, _61_empty,_61_man,_61_woman, start_row=start_61, ward_name="61병동")
     write_adm_dc(write_ws, adm_62, dc_62, _62_empty,_62_man,_62_woman, start_row=start_62, ward_name="62병동")
@@ -162,14 +186,21 @@ def generate_excel(input1, input2,_61_empty,_61_man,_61_woman,_62_empty,_62_man,
     currentCell = write_ws.cell(start_opd, 2)
     currentCell.alignment = Alignment(horizontal='center', vertical='center')
     write_ws.row_dimensions[1].height = 16.5
-    write_ws.column_dimensions['A'].width = 8
+    write_ws.row_dimensions[2].height = 39.6
+    write_ws.column_dimensions['A'].width = 9.5
     write_ws.column_dimensions['B'].width = 9.38
     write_ws.column_dimensions['C'].width = 11.13
     write_ws.column_dimensions['D'].width = 8.63
-    write_ws.column_dimensions['E'].width = 7.25
+    write_ws.column_dimensions['E'].width = 9
     write_ws.column_dimensions['F'].width = 51.38
     write_ws.column_dimensions['G'].width = 41
-
+    write_ws.column_dimensions['H'].width = 9
+    write_ws.column_dimensions['I'].width = 12.7
+    write_ws.column_dimensions['J'].width = 12.2
+    write_ws.column_dimensions['K'].width = 18
+    write_ws.column_dimensions['L'].width = 12
+    
+    set_border(write_ws, 'A{}:L{}'.format(2,start_61-2))
     set_border(write_ws, 'A{}:G{}'.format(start_61,start_opd)) 
     set_thick_border(write_ws, 'A{}:G{}'.format(start_61, start_62-1))
     set_thick_border(write_ws, 'A{}:G{}'.format(start_62, start_37-1))
@@ -182,6 +213,20 @@ def generate_excel(input1, input2,_61_empty,_61_man,_61_woman,_62_empty,_62_man,
     write_ws.cell(1, 1, str(yesterday.year)+"년 "+str(yesterday.month)+"월 "+str(yesterday.day)+"일 "+what_day_is_it(yesterday)+" 당직보고")
     currentCell = write_ws.cell(1, 1)
     currentCell.alignment = Alignment(vertical='center')
+    write_ws.cell(2,2,"성명\n병록번호\n성별/나이")
+    write_ws.cell(2,3,"지정의\n마지막 외래")
+    write_ws.cell(2,4,"주소")
+    write_ws.cell(2,5,"진료시간")
+    write_ws.cell(2,6,"의뢰 사유 및 평가 내용")
+    write_ws.cell(2,7,"진단\n치료결과")
+    write_ws.cell(2,8,"자살시도\n여부")
+    write_ws.cell(2,9,"ER 입실 시간")
+    write_ws.cell(2,10,"NP 의뢰 시간")
+    write_ws.cell(2,11,"NP 문제 해결 시간\n(회신 시간 기준")
+    write_ws.cell(2,12,"ER 퇴실 시간")
+    for i in range(2,13) :
+        write_ws.cell(2,i).alignment = Alignment(horizontal = 'center', vertical='center', wrapText=True)
+
     filename = "당직보고_"+yesterday.strftime("%Y%m%d")+".xlsx"
     write_wb.save(filename)
     return filename

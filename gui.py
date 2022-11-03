@@ -26,9 +26,9 @@ class MainWindow(QWidget):
         self.setting_blank(self.today_night_ped)
         self.today_night_adult = QLineEdit()
         self.setting_blank(self.today_night_adult)
-        self.dangjik_today_night_layout.addWidget(QLabel("소아응급실"))
+        self.dangjik_today_night_layout.addWidget(QLabel("소아 밤당직"))
         self.dangjik_today_night_layout.addWidget(self.today_night_ped)
-        self.dangjik_today_night_layout.addWidget(QLabel("성인응급실"))
+        self.dangjik_today_night_layout.addWidget(QLabel("성인 밤당직"))
         self.dangjik_today_night_layout.addWidget(self.today_night_adult)
         
         self.dangjik_today_day_layout = QVBoxLayout()
@@ -92,7 +92,7 @@ class MainWindow(QWidget):
         self.tg_discharge.toggled[bool].connect(self.no_discharge)
 
         flo = QFormLayout()
-        # flo.addRow(self.dangjik_layout)
+        flo.addRow(self.dangjik_layout)
         flo.addRow("입원",self.tg_admission)
         flo.addRow(self.admission_text)
         flo.addRow("퇴원",self.tg_discharge)
@@ -107,7 +107,7 @@ class MainWindow(QWidget):
     def execute(self):
         adm_text = StringIO(self.admission_text.text())
         dc_text = StringIO(self.discharge_text.text())
-        filename = generate_excel(adm_text, dc_text, self._61_empty.text(),self._61_man.text(),self._61_woman.text(),self._62_empty.text(),self._62_man.text(),self._62_woman.text())
+        filename = generate_excel(adm_text, dc_text, self._61_empty.text(),self._61_man.text(),self._61_woman.text(),self._62_empty.text(),self._62_man.text(),self._62_woman.text(), self.yesterday_ped.text(), self.yesterday_adult.text(),self.today_day_adult.text(),self.today_night_ped.text(), self.today_night_adult.text())
         QMessageBox.about(self,'작업 완료','당직표 파일이 생성되었습니다!\n엑셀이 실행됩니다.')
         os.startfile(filename)
         self.close()
