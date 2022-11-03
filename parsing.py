@@ -1,6 +1,7 @@
 import pandas as pd
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Border, Side, DEFAULT_FONT
+from datetime import datetime, timedelta
 
 def set_border(ws, cell_range):
     thin = Side(border_style="thin", color="000000")
@@ -170,4 +171,7 @@ def generate_excel(input1, input2,_61_empty,_61_man,_61_woman,_62_empty,_62_man,
     set_thick_border(write_ws, 'A{}:G{}'.format(start_121, start_opd-1))
     set_thick_border(write_ws, 'A{}:G{}'.format(start_opd, start_opd))
 
-    write_wb.save("dangjik.xlsx")
+    yesterday = datetime.today() - timedelta(1)
+    filename = "당직보고_"+yesterday.strftime("%Y%m%d")+".xlsx"
+    write_wb.save(filename)
+    return filename
