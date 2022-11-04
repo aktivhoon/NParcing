@@ -14,7 +14,7 @@
 
 <center><img src="images/full.png"></center>
 
-이후 generate을 누르면 자동으로 '당직보고_2022OOOO.xlsx` 파일이 `NParsing_vO.O.O.exe` 파일이 있는 폴더 내에 만들어진 후 자동 실행됩니다! (끝!)
+이후 generate을 누르면 자동으로 `당직보고_2022OOOO.xlsx` 파일이 `NParsing_vO.O.O.exe` 파일이 있는 폴더 내에 만들어진 후 자동 실행됩니다! (끝!)
 혹시 오류사항이 있다면 `김영훈`이나 `정지홍`에게 알려주세요! ㅎㅎ
 
 ***May the 내공 be with you..***
