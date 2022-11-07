@@ -51,6 +51,9 @@ def make_space(ws, n, start_row, row_name) :
             elif j == 8 :  # 자살시도 N 채워두기 
                 ws.cell(i,j).alignment = Alignment(horizontal='center', vertical='center', wrapText=True)
                 ws.cell(i,j,"N")
+          #  elif j == 5 or j >=9 :
+          #      ws.cell(i,j).alignment = Alignment(horizontal='center', vertical='center', wrapText=True)
+          #      ws.cell(i,j,"'")
             else : # 나머지는 가운데 정렬
                 ws.cell(i,j).alignment = Alignment(horizontal='center', vertical='center', wrapText=True)
 
@@ -174,11 +177,21 @@ def generate_excel(input1, input2,_61_empty,_61_man,_61_woman,_62_empty,_62_man,
     start_121 = start_37+max(1,len(adm_37))+max(1,len(dc_37))+1
     start_opd = start_121+max(1, len(adm_121))+max(1,len(dc_121))+1
 
+    # 주말 여부 확인
+    yesterday = datetime.today() - timedelta(1)
+    yesterday_is_weekend = False
+    if what_day_is_it(yesterday) == "토요일" or what_day_is_it(yesterday) == "일요일" :
+        yesterday_is_weekend = True 
+
     make_space(write_ws, int(yesterday_ped),start_row =start_yesterday_ped, row_name="전일\n소아당직")
     make_space(write_ws, int(yesterday_adult),start_row =start_yesterday_adult, row_name="전일\n성인당직")
     make_space(write_ws, int(today_day_adult),start_row =start_today_day_adult, row_name="성인\n낮당직")
-    make_space(write_ws, int(today_night_ped),start_row =start_today_night_ped, row_name="소아\n밤당직")
-    make_space(write_ws, int(today_night_adult),start_row =start_today_night_adult, row_name="성인\n밤당직")
+    if yesterday_is_weekend == True :
+        make_space(write_ws, int(today_night_ped),start_row =start_today_night_ped, row_name="소아\n응급실")
+        make_space(write_ws, int(today_night_adult),start_row =start_today_night_adult, row_name="성인\n응급실")
+    else :
+        make_space(write_ws, int(today_night_ped),start_row =start_today_night_ped, row_name="소아\n밤당직")
+        make_space(write_ws, int(today_night_adult),start_row =start_today_night_adult, row_name="성인\n밤당직")
 
     write_adm_dc(write_ws, adm_61, dc_61, _61_empty,_61_man,_61_woman, start_row=start_61, ward_name="61병동")
     write_adm_dc(write_ws, adm_62, dc_62, _62_empty,_62_man,_62_woman, start_row=start_62, ward_name="62병동")
@@ -195,10 +208,10 @@ def generate_excel(input1, input2,_61_empty,_61_man,_61_woman,_62_empty,_62_man,
     write_ws.row_dimensions[2].height = 39.6
     write_ws.column_dimensions['A'].width = 9.5
     write_ws.column_dimensions['B'].width = 9.38
-    write_ws.column_dimensions['C'].width = 11.13
+    write_ws.column_dimensions['C'].width = 13
     write_ws.column_dimensions['D'].width = 8.63
     write_ws.column_dimensions['E'].width = 9
-    write_ws.column_dimensions['F'].width = 51.38
+    write_ws.column_dimensions['F'].width = 55
     write_ws.column_dimensions['G'].width = 41
     write_ws.column_dimensions['H'].width = 9
     write_ws.column_dimensions['I'].width = 12.7
