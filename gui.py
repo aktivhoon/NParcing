@@ -44,10 +44,10 @@ class MainWindow(QWidget):
             self.adult_layout.addWidget(QLabel("성인 응급실"), alignment = Qt.AlignJustify)
             self.adult_layout.addWidget(self.today_night_adult)
         else :
-            self.adult_layout.addWidget(QLabel("성인 밤당직"), alignment = Qt.AlignHCenter)
-            self.adult_layout.addWidget(self.today_night_adult, alignment = Qt.AlignHCenter)
-            self.adult_layout.addWidget(QLabel("성인 낮당직"))
-            self.adult_layout.addWidget(self.today_day_adult)
+            self.adult_layout.addWidget(QLabel("성인 낮당직"), alignment = Qt.AlignHCenter)
+            self.adult_layout.addWidget(self.today_day_adult, alignment = Qt.AlignHCenter)
+            self.adult_layout.addWidget(QLabel("성인 밤당직"))
+            self.adult_layout.addWidget(self.today_night_adult)
 
         # 입/퇴원 layout
         self.admission_text = QLineEdit()
