@@ -215,7 +215,7 @@ def generate_excel(input1, input2,_61_empty,_61_man,_61_woman,_62_empty,_62_man,
     write_ws.column_dimensions['A'].width = 9.5
     write_ws.column_dimensions['B'].width = 9.38
     write_ws.column_dimensions['C'].width = 13
-    write_ws.column_dimensions['D'].width = 8.63
+    write_ws.column_dimensions['D'].width = 9.38
     write_ws.column_dimensions['E'].width = 9
     write_ws.column_dimensions['F'].width = 55
     write_ws.column_dimensions['G'].width = 41
@@ -251,7 +251,6 @@ def generate_excel(input1, input2,_61_empty,_61_man,_61_woman,_62_empty,_62_man,
     write_ws.cell(2,12,"ER 퇴실 시간")
     for i in range(2,13) :
         write_ws.cell(2,i).alignment = Alignment(horizontal = 'center', vertical='center', wrapText=True)
-
     filename = "당직보고_"+yesterday.strftime("%Y%m%d")+".xlsx"
     write_wb.save(filename)
     return filename

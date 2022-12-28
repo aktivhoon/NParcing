@@ -12,10 +12,14 @@ class MainWindow(QWidget):
         super().__init__(parent)
         
         # 주말 여부 확인
-        yesterday =  what_day_is_it(datetime.today() - timedelta(1))
+        yesterday =  datetime.today() - timedelta(1)
         yesterday_is_weekend = False
-        if yesterday == "토요일" or yesterday == "일요일" :
+        if what_day_is_it(yesterday) == "토요일" or what_day_is_it(yesterday) == "일요일" :
             yesterday_is_weekend = True
+        filename = "당직보고_"+yesterday.strftime("%Y%m%d")+".xlsx"
+        if os.path.isfile(filename):
+            QMessageBox.about(self,'오류','당직파일과 같은 이름의 파일이 이미 존재합니다!\n그 파일을 다른 위치로 옮기거나 지운 뒤 다시 실행해주세요.')
+            sys.exit()
         
         # dangjik layout
         self.ped_layout = QHBoxLayout()
