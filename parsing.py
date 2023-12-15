@@ -36,8 +36,9 @@ def convert_name(name):
     if 'a' <= name[-1] <= 'z' or 'A' <= name[-1] <= 'Z':
         # check whether name itself is korean
         if not ('a' <= name[0] <= 'z' or 'A' <= name[0] <= 'Z'):
-            # remove the last character of the name (ex. 김영훈A -> 김영훈)
-            name = name[:-1]
+            while 'a' <= name[-1] <= 'z' or 'A' <= name[-1] <= 'Z':
+                # remove the last character of the name (ex. 김영훈A -> 김영훈)
+                name = name[:-1]
     if len(name) == 2:
         return name[0] + "O"
     elif len(name) > 2:
